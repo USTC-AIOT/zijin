@@ -1,0 +1,22 @@
+---
+# [Deploy Kubernetes monitoring with Netdata | Learn Netdata](https://learn.netdata.cloud/docs/agent/packaging/installer/methods/kubernetes)
+- name: Deploy Kubernetes monitoring with Netdata
+  hosts: 
+    - T640
+
+  tasks:
+  - name: Install the Netdata Helm chart
+    ansible.builtin.shell: |
+      helm repo add netdata https://netdata.github.io/helmchart/
+      helm install netdata netdata/netdata -f override.yml
+    # when: false
+
+  - name: Confirm that your cluster now runs a netdata service
+    ansible.builtin.shell: |
+      kubectl get services
+      kubectl get pods
+  
+  # - name: Claim your Kubernetes cluster to Netdata Cloud
+  #   ansible.builtin.shell: |
+  #     helm upgrade -f override.yml netdata netdata/netdata
+  #   when: True

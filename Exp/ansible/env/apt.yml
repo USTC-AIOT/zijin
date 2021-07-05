@@ -1,0 +1,58 @@
+---
+- name: apt commands
+  hosts: T640
+
+  tasks:
+  - name: Run the equivalent of "apt-get update" as a separate step
+    when: false
+    ansible.builtin.apt:
+      update_cache: yes
+      cache_valid_time: 3600
+    become: yes
+
+  - name: Update all packages to their latest version
+    when: false
+    apt:
+      name: "*"
+      state: latest
+    become: yes
+  
+  - name: Remove dependencies that are no longer required
+    apt:
+      autoremove: yes
+    become: yes
+
+  - name: Remove useless packages from the cache
+    apt:
+      autoclean: yes
+    become: yes
+
+  - name: Install packages
+    apt:
+      pkg:
+      - git
+      - curl
+      - byobu # [Byobu](https://www.byobu.org/)
+      - tree
+      - dstat 
+      - ncdu
+    become: yes
+
+  - name: Bat
+  # [sharkdp/bat: A cat(1) clone with wings.](https://github.com/sharkdp/bat)
+    shell: |
+      wget https://pd.zwc365.com/seturl/https://github.com/sharkdp/bat/releases/download/v0.18.1/bat_0.18.1_amd64.deb
+      dpkg -i bat_0.18.1_amd64.deb
+    args:
+      creates: /usr/bin/bat
+    become: yes
+
+  - name: Docker-compose
+    shell: |
+      curl -L "https://github.com/docker/compose/releases/download/1.29.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      chmod +x /usr/local/bin/docker-compose
+    args:
+      creates: /usr/local/bin/docker-compose
+    become: yes
+
+      

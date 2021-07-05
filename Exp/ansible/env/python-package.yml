@@ -1,0 +1,14 @@
+---
+- hosts: T640
+  # roles:
+  #   - andrewrothstein.miniconda
+  tasks:
+  - name: Install python package
+    # command: /usr/local/anaconda/bin/pip install glances
+    ansible.builtin.pip:
+      name:
+        - glances
+        - speedtest-cli
+      executable: ~/miniconda3/bin/pip
+
+  

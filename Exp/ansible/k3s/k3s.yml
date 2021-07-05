@@ -1,0 +1,8 @@
+# [Rancher Docs: Installation](https://rancher.com/docs/k3s/latest/en/installation/)
+- name: k3s Setup
+  hosts: T640
+
+  tasks:
+  - name: Install k3s
+    command: curl -sfL https://get.k3s.io | sh -
+    become: yes

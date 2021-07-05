@@ -1,0 +1,81 @@
+---
+- name: Prequisite
+  hosts: kube_control_plane
+  vars:
+    snap_folder: /tmp/snap/
+  tasks:
+  - name: Create temp directory
+    command: mkdir -p {{snap_folder}}
+    args:
+      creates: "{{snap_folder}}"
+  - name: Prequisite
+    shell: UBUNTU_STORE_ARCH=arm64 snap download {{ item }}
+    args:
+      executable: /bin/bash
+      chdir: "{{snap_folder}}"
+      creates: "{{snap_folder}}"
+    loop:
+      - snapd
+      - core18
+      - microk8s
+
+- name: MicroK8s
+  hosts: kube_node
+  vars:
+    snap_folder: /tmp/snap/
+    user: zijin
+  tasks:
+  - name: Granting sudo Privileges to Users
+    when: false
+    command: adduser {{user}} sudo
+    become: yes
+  
+  - name: delete previous files
+    when: true
+    ansible.builtin.command: rm -rf {{snap_folder}}
+
+  - name: copy
+    when: true
+    ansible.builtin.copy:
+      src: "{{snap_folder}}"
+      dest: "{{snap_folder}}"
+
+  - name: Install Prequisite
+    when: true
+    shell: |
+      snap ack {{item}}_*.assert
+      snap install {{item}}_*.snap
+    args:
+      chdir: "{{snap_folder}}"
+    become: yes
+    loop:
+      - snapd
+      - core18
+  
+  - name: Install MicroK8s
+    when: true
+    shell: |
+      snap ack {{item}}_*.assert
+      snap install {{item}}_*.snap --classic
+    args:
+      chdir: "{{snap_folder}}"
+    become: yes
+    loop:
+      - microk8s
+
+- name: Master nodes
+  hosts: kube_control_plane
+  vars:
+    snap_folder: /tmp/snap/
+    user: zijin
+  tasks:
+  - name: Master nodes add
+    when: true
+    shell: |
+      microk8s.add-node
+      usermod -a -G microk8s {{user}}
+      chown -f -R {{user}} ~/.kube
+    become: yes
+
+
+  

@@ -1,0 +1,11 @@
+- name: 
+  hosts: kube_control_plane
+  tasks: 
+
+  - name: Remove k8s
+    command: snap remove {{ item }}
+    become: yes
+    loop:
+      - kubectl
+      - kubelet
+      - kubeadm

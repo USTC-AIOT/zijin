@@ -1,0 +1,14 @@
+  
+  - name: Clash
+    shell: |
+      wget https://ghproxy.com/https://github.com/Dreamacro/clash/releases/download/v1.6.0/clash-linux-amd64-v1.6.0.gz
+      gzip -d clash-linux-amd64-v1.6.0.gz
+      chmod +x clash-linux-amd64-v1.6.0
+      # wget -O config.yml "https://dingyue.suying666.info/link/0uWMWsiYxqnGsmyb?clash=1&log-level=info"
+      # mv config.yml config.yaml
+
+  - name: proxychains4
+    apt:
+      pkg:
+      - proxychains4
+    become: yes

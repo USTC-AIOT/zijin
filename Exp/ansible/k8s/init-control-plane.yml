@@ -1,0 +1,13 @@
+---
+- name: Init control node
+  hosts: kube_control_plane
+  gather_facts: yes
+  vars:
+      ip_addr: "{{ ansible_default_ipv4['address'] }}"
+      pods_network_cidr: 10.244.0.0/16
+      dest_kube_flannel: ~/kube-flannel.yml
+  tasks:
+  - name: kubeadm init
+    shell: |
+      kubeadm init --image-repository=registry.aliyuncs.com/google_containers --kubernetes-version=v1.20.0
+    become: yes

@@ -1,0 +1,57 @@
+---
+- name: Install netdata
+  hosts: 
+    - R740
+  remote_user: ustc
+
+  tasks:
+  # - name: Ensure group "docker" exists
+  #   ansible.builtin.group:
+  #     name: docker
+  #     state: present
+  # - name: add USER to the docker group
+  #   ansible.builtin.user:
+  #     name: zijin
+  #     groups: docker
+  #     append: yes
+
+  # - name: Install command "curl"
+  #   ansible.builtin.apt:
+  #     pkg:
+  #     - curl
+  #   become: yes
+
+
+  - name: Move downloaded files to the /tmp directory on the offline system
+    # ansible.builtin.command: cat /home/zijin/Exp/Netdata/netdata.sh
+    ansible.builtin.copy:
+      src: /tmp/Netdata
+      dest: /tmp
+
+
+  - name: Install Netdata on offline systems
+    ansible.builtin.shell:
+      cmd: bash /tmp/Netdata/kickstart-static64.sh --local-files /tmp/Netdata/netdata-v1.31.0.gz.run /tmp/Netdata/sha256sums.txt --claim-token=Owtd5daC0KnIvI9mI-Jma_VWDgcEk4Mk7WoExooa78Kd82ISniTGOO0FU0GuRkDIwsPspcrcncnjMpm3dpq3Ky-le4EDNf26Tc4amEkoykB8COW85-tVH2_pk2RpHzuPQK2nSLI --claim-rooms=364199f5-70fe-412d-ae54-c893516bf65e
+      chdir: /tmp/Netdata/
+    become: yes
+#     ansible.builtin.yum:
+#       name: httpd
+#       state: latest
+#   - name: Write the apache config file
+#     ansible.builtin.template:
+#       src: /srv/httpd.j2
+#       dest: /etc/httpd.conf
+
+# - name: Update db servers
+#   hosts: databases
+#   remote_user: root
+
+#   tasks:
+#   - name: Ensure postgresql is at the latest version
+#     ansible.builtin.yum:
+#       name: postgresql
+#       state: latest
+#   - name: Ensure that postgresql is started
+#     ansible.builtin.service:
+#       name: postgresql
+#       state: started

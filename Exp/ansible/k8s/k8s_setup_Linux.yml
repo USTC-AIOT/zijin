@@ -1,0 +1,40 @@
+---
+- name: k8s Setup
+  hosts: T640
+
+  tasks:
+  - name: Install k8s
+    command: snap install {{ item }} --classic
+    # command: snap install {{ item }} --classic --channel=1.20/stable
+    become: yes
+    loop:
+      - kubectl
+      - kubelet
+      - kubeadm
+      - helm
+
+  - name: Install kubectl completion for fish shell
+    shell: fisher install evanlucas/fish-kubectl-completions
+    args:
+      executable: /usr/bin/fish
+
+  - name: Install && Start minikube
+    when: false
+    shell: |
+      curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+      sudo install minikube-linux-amd64 /usr/local/bin/minikube
+      minikube start --image-mirror-country='cn'
+    become: yes
+    args:
+      creates: /usr/local/bin/minikube
+
+  # - name: Check
+  #   shell: |
+  #     kubectl cluster-info
+  #     kubectl get nodes
+  #   register: out
+  
+  # - debug: var=out.stdout_lines
+
+    
+  #     kubeadm init --image-repository=http://registry.aliyuncs.com/google_containers --kubernetes-version=v1.20

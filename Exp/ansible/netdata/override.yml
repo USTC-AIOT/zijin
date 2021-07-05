@@ -1,0 +1,19 @@
+parent:
+  claiming:
+    enabled: true
+    token: "dhPqwgRSUg9yHPpJNTqrw3gLqK7n34u-tANJM3N7JxWgpFWrrd0WBqS6HbFDmUXvP6ijuqn0l7vm62_0onsPd1bMWwD8NeeKBljLMG4C0O0bGG52mfjY3bGTtUtFh6qf-GVBoFA"
+    rooms: "442e3dac-b2e2-43b4-a83b-149e324a55a2"
+
+child:
+  claiming:
+    enabled: true
+    token: "dhPqwgRSUg9yHPpJNTqrw3gLqK7n34u-tANJM3N7JxWgpFWrrd0WBqS6HbFDmUXvP6ijuqn0l7vm62_0onsPd1bMWwD8NeeKBljLMG4C0O0bGG52mfjY3bGTtUtFh6qf-GVBoFA"
+    rooms: "442e3dac-b2e2-43b4-a83b-149e324a55a2"
+  configs:
+    netdata:
+      data: |
+        [global]
+          memory mode = ram
+          history = 3600
+        [health]
+          enabled = no
