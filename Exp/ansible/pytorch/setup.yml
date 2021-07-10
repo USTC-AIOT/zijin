@@ -1,0 +1,39 @@
+# [Start Locally | PyTorch](https://pytorch.org/get-started/locally/)
+- name: pytorch Setup
+  hosts: T640
+  # hosts: nano
+  vars:
+    installation: pytorch
+
+  tasks:
+  - name: Setup Environment
+    command: conda create -n {{ installation }} -y
+    args:
+      creates: ~/miniconda3/envs/{{ installation }}
+
+# [mamba-org/mamba: The Fast Cross-Platform Package Manager](https://github.com/mamba-org/mamba)
+  - name: Install mamba
+    command: conda install mamba -y -n base -c conda-forge
+    args:
+      creates: ~/miniconda3/bin/mamba
+
+  - name: Install tools
+    command: mamba install {{ item }} -n {{ installation }} -c conda-forge -y 
+    loop:
+      - jupyterlab 
+      - matplotlib
+
+  - name: Install {{ installation }}
+    command: mamba install {{ item }} -n {{ installation }} -c pytorch -c conda-forge -y 
+    loop:
+      - pytorch torchvision torchaudio cudatoolkit
+
+# [Welcome to fastai | fastai](https://docs.fast.ai/)
+  - name: Install fast.ai
+    when: false
+    command: mamba install -c fastchan fastai
+    # proxychains4 mamba install -c fastchan fastai -n pytorch
+
+  - name: Remove unused packages and caches.
+    when: false
+    command: conda clean --all --yes

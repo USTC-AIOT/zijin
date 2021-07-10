@@ -1,0 +1,6 @@
+---
+- name: setup environment for everyone
+  hosts: nano
+  remote_user: ustc
+  tasks:
+  - name: 

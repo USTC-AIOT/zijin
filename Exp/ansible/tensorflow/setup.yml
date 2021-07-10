@@ -1,0 +1,43 @@
+# [Install TensorFlow 2](https://www.tensorflow.org/install)
+- name: tensorflow Setup
+  hosts: T640
+  # hosts: nano
+  vars:
+    installation: tensorflow
+  
+  tasks:
+  - name: Setup Environment
+    command: conda create -n {{ installation }} -y
+    args:
+      creates: ~/miniconda3/envs/{{ installation }}
+
+# [mamba-org/mamba: The Fast Cross-Platform Package Manager](https://github.com/mamba-org/mamba)
+  - name: Install mamba
+    command: conda install mamba -y -n base -c conda-forge
+    args:
+      creates: ~/miniconda3/bin/mamba
+
+  - name: Install tools
+    command: mamba install {{ item }} -n {{ installation }} -c conda-forge -y 
+    loop:
+      - jupyterlab 
+      - matplotlib
+
+  - name: Install {{ installation }}
+    shell: |
+      conda activate {{ installation }}
+      # pip install --upgrade {{ installation }}
+      pip install {{ installation }}
+
+  - name: Install Horovod
+    when: false
+    shell: |
+      conda activate {{ installation }}
+      pip install horovod
+      # proxychains4 pip install horovod
+    args:
+      creates: ~/miniconda3/envs/{{ installation }}/bin/horovodrun
+
+  - name: Remove unused packages and caches.
+    when: false
+    command: conda clean --all --yes
